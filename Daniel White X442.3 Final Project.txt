@@ -1,0 +1,46 @@
+def textanalyzer(file):
+	#This text analyzer accepts a file name and returns the top 5 most frequently used words, the longest word, and the average word size in the file
+	try:
+		filetext = open(file,'r')
+		contents = filetext.read().lower() #read file, make letters lowercase to avoid duplicate words
+	except (NameError,IOError, TypeError):
+		print('Error opening file')
+	else:
+		import re
+		wordfind = re.compile(r'\w+') #regex to find all words in file
+		words = wordfind.findall(contents) #words in file added to list called 'words'
+		uniquewords = []
+		for i in words:
+			if i not in uniquewords:
+				uniquewords.append(i) #adds all unique words to one list
+		counts = []
+		for j in uniquewords:
+			count = 0
+			for i in words:
+				if i == j:
+					count+=1
+			counts.append((count,j)) # counts the number of times the unique words appear in the file
+		counts.sort()
+		counts.reverse() #puts counts in order from largest to smallest
+		while 1:
+			print ('Text Analysis Report\n\nTop 5 words (occurrences):')
+			rank = 1
+			for count, word in counts[:5]:
+				print('%2s. %s (%d)' %(rank,word,count))
+				rank +=1 #prints the 5 most frequently used words and their occurrences
+			print ('\nLongest Word (characters):')
+			longest = 0
+			newlist = []
+			for i in words:
+				if len(i) > longest:
+					longest = len(i)
+					newlist.append(i)
+			longestword = newlist [-1]
+			print('%s (%d)' % (longestword,longest))
+			print ('\nAverage Word Length:') #prints the longest word in the text file
+			totallength = countwords = 0
+			for i in words:
+				totallength += len(i)
+				countwords += 1
+			print('%.2f characters' % (totallength/countwords)) # prints the average by dividing the total number of characters in the words list by the number of words.
+			break
